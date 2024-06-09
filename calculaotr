@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h2 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Age Calculator</h2>
+    <p>Enter your birth date (YYYYMMDD or YYMMDD):</p>
+    <input type="text" id="birthDate" placeholder="" onkeypress="handleKeyPress(event)">
+    <button onclick="calculateAge()">Calculate Age</button>
+    <p id="result"></p>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                calculateAge();
+            }
+        }
+
+        function calculateAge() {
+            const input = document.getElementById('birthDate').value;
+            let birthYear, birthMonth, birthDay;
+
+            if (input.length === 8) {
+                birthYear = parseInt(input.substring(0, 4));
+                birthMonth = parseInt(input.substring(4, 6)) - 1; // Months are zero-based in JavaScript Date
+                birthDay = parseInt(input.substring(6, 8));
+            } else if (input.length === 6) {
+                birthYear = parseInt('20' + input.substring(0, 2));
+                birthMonth = parseInt(input.substring(2, 4)) - 1;
+                birthDay = parseInt(input.substring(4, 6));
+            } else {
+                document.getElementById('result').innerText = 'Please enter a valid date format.';
+                return;
+            }
+
+            const birthDate = new Date(birthYear, birthMonth, birthDay);
+            const today = new Date();
+            const diffInMilliseconds = today - birthDate;
+
+            if (diffInMilliseconds < 0) {
+                document.getElementById('result').innerText = 'Please enter a birth date in the past.';
+                return;
+            }
+
+            const ageDate = new Date(diffInMilliseconds);
+
+            const years = ageDate.getUTCFullYear() - 1970; // The Unix epoch starts in 1970
+            const months = ageDate.getUTCMonth();
+            const days = ageDate.getUTCDate() - 1; // Remove the epoch start day
+
+            document.getElementById('result').innerText = `You are ${years} years, ${months} months, and ${days} days old.`;
+        }
+    </script>
+</body>
+</html>
